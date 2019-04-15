@@ -1,10 +1,8 @@
 class User < ApplicationRecord
   include BCrypt
 
-  vaidates_presence_of :first_name, :last_name, :email, :password_hash
-  validate_uniqueness_of :email
-  validates :first_name, length: { minimum: 1 }
-  validates :last_name, length: { minimum: 1 }
+  validates_presence_of :first_name, :last_name, :email
+  validates_uniqueness_of :email
   validate :first_name_must_be_capitalized
   validate :last_name_must_be_capitalized
   validate :email_must_have_at_and_dot

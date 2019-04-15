@@ -2,6 +2,11 @@ language: ruby
 cache: bundler
 rvm:
   - 2.5.2
+services:
+  - postgresql
+before_script:
+  - psql -c 'create database myapp_test;' -U postgres
 script:
+  - bundle exec rake db:migrate
   - bundle exec rubocop
   - bundle exec rspec

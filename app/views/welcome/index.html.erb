@@ -1,1 +1,5 @@
-
+<% if logged_in? %>
+  Hello <%= current_user.full_name %>
+<% else %>
+  Log in!
+<% end %>

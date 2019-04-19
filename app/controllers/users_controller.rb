@@ -20,6 +20,12 @@ class UsersController < ApplicationController
 
   # GET /users/1/edit
   def edit
+    unless @user == current_user
+      respond_to do |format|
+        format.html { redirect_back fallback_location: root_path, error: 'You can only edit your own account.' }
+        format.json { render json: @user.errors, status: :unprocessable_entity }
+      end
+    end
   end
 
   # POST /users
@@ -42,12 +48,17 @@ class UsersController < ApplicationController
   # PATCH/PUT /users/1.json
   def update
     respond_to do |format|
-      if @user == current_user && @user.update(user_params)
-        session[:user_id] = @user.id
-        format.html { redirect_to @user, notice: 'User was successfully updated.' }
-        format.json { render :show, status: :ok, location: @user }
+      if @user == current_user
+        if @user.update(user_params)
+          session[:user_id] = @user.id
+          format.html { redirect_to @user, notice: "#{@user.full_name} was successfully updated." }
+          format.json { render :show, status: :ok, location: @user }
+        else
+          format.html { render :edit }
+          format.json { render json: @user.errors, status: :unprocessable_entity }
+        end
       else
-        format.html { render :edit }
+        format.html { redirect_to @user, error: 'You can only update your own account.' }
         format.json { render json: @user.errors, status: :unprocessable_entity }
       end
     end
@@ -56,16 +67,17 @@ class UsersController < ApplicationController
   # DELETE /users/1
   # DELETE /users/1.json
   def destroy
-    if @user == current_user
-      reset_session
-      @user.destroy
-      respond_to do |format|
-        format.html { redirect_to users_url, notice: 'User was successfully destroyed.' }
+    respond_to do |format|
+      if @user == current_user
+        reset_session
+        name = @user.full_name
+        @user.destroy
+        format.html { redirect_to users_url, notice: "#{name} was successfully destroyed." }
         format.json { head :no_content }
+      else
+        format.html { redirect_to users_url, error: 'You can only destroy your own account.' }
+        format.json { render json: @user.errors, status: :unprocessable_entity }
       end
-    else
-      format.html { redirect_to users_url }
-      format.json { render json: @user.errors, status: :unprocessable_entity }
     end
   end
 

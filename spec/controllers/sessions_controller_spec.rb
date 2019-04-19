@@ -30,6 +30,12 @@ RSpec.describe SessionsController, type: :controller do
         { :email => "john.doe@test.com", :password => "not_password" }
       }
 
+      it "does not log the user in" do
+        user = User.create! valid_attributes
+        post :create, params: invalid_login_params, session: {}
+        expect(session[:user_id]).to be(nil)
+      end
+
       it "redirects to login" do
         user = User.create! valid_attributes
         post :create, params: invalid_login_params, session: {}

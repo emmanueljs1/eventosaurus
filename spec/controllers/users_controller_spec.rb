@@ -45,6 +45,10 @@ RSpec.describe UsersController, type: :controller do
     }
   }
 
+  let (:invalid_session) {
+    {}
+  }
+
   describe "GET #index" do
     it "returns a success response" do
       user = User.create! valid_attributes
@@ -99,11 +103,11 @@ RSpec.describe UsersController, type: :controller do
   end
 
   describe "PUT #update" do
-    context "with valid params" do
-      let(:new_attributes) {
-        { :first_name => "John", :last_name => "Dorian", :email => "john.doe@test.com", :password => "password" }
-      }
+    let(:new_attributes) {
+      { :first_name => "John", :last_name => "Dorian", :email => "john.doe@test.com", :password => "password" }
+    }
 
+    context "with valid params and valid session" do
       it "updates the requested user" do
         include BCrypt
         user = User.create! valid_attributes
@@ -119,6 +123,15 @@ RSpec.describe UsersController, type: :controller do
       end
     end
 
+    context "with invalid session" do
+      it "does not update the requested user" do
+        user = User.create! valid_attributes
+        put :update, params: {id: user.to_param, user: new_attributes}, session: invalid_session
+        user.reload
+        expect(user.full_name).to eq("John Doe")
+      end
+    end
+
     context "with invalid params" do
       it "returns a success response (i.e. to display the 'edit' template)" do
         user = User.create! valid_attributes
@@ -129,11 +142,22 @@ RSpec.describe UsersController, type: :controller do
   end
 
   describe "DELETE #destroy" do
-    it "destroys the requested user" do
-      user = User.create! valid_attributes
-      expect {
-        delete :destroy, params: {id: user.to_param}, session: valid_session[user]
-      }.to change(User, :count).by(-1)
+    context "with valid session" do
+      it "destroys the requested user" do
+        user = User.create! valid_attributes
+        expect {
+          delete :destroy, params: {id: user.to_param}, session: valid_session[user]
+        }.to change(User, :count).by(-1)
+      end
+    end
+
+    context "with an invalid session" do
+      it "does not destroy the requested user" do
+        user = User.create! valid_attributes
+        expect {
+          delete :destroy, params: {id: user.to_param}, session: invalid_session
+        }.to change(User, :count).by(0)
+      end
     end
 
     it "redirects to the users list" do

@@ -8,7 +8,23 @@ class User < ApplicationRecord
   validate :email_must_have_at_and_dot
 
   has_many :events_users, dependent: :destroy
-  has_many :events, through: :events_users
+  has_many :events, through: :events_users, source: :event
+
+  def events_hosting
+    created = []
+    events.each do |event|
+      created << event if event.creator == self
+    end
+    created
+  end
+
+  def events_attending
+    attending = []
+    events.each do |event|
+      attending << event if event.creator != self
+    end
+    attending
+  end
 
   def first_name_must_be_capitalized
     errors.add(:first_name, 'must be capitalized') if first_name && first_name[0, 1] != first_name[0, 1].upcase

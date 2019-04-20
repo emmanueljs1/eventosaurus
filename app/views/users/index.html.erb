@@ -1,25 +1,18 @@
-<h1>Users</h1>
-
-<table>
-  <thead>
-    <tr>
-      <th>Full Name</th>
-      <th>Email</th>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
-
-  <tbody>
+<div class="row">
+  <div class="col">
+    <div class="row"><h1>Users</h1></div>
     <% @users.each do |user| %>
-      <tr>
-        <td><%= user.full_name %></td>
-        <td><%= user.email %></td>
-        <td><%= link_to 'Show', user %></td>
-        <td><%= link_to 'Edit', edit_user_path(user) %></td>
-        <td><%= link_to 'Destroy', user, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
+      <div class="row">
+        <div class="col">
+          <h5><%= user.full_name %></h5>
+          <%= user.email %>
+          <%= link_to 'Show', user, class: 'btn btn-primary' %>
+          <%= link_to 'Edit', edit_user_path(user), class: 'btn btn-secondary' %>
+          <% if logged_in? && session[:user_id] == user.id %>
+            <%= link_to 'Destroy', user, method: :delete, class: 'btn btn-danger', data: { confirm: 'Are you sure?' } %>
+          <% end %>
+        </div>
+      </div>
     <% end %>
-  </tbody>
-</table>
-
-<br>
+  </div>
+</div>

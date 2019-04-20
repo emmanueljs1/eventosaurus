@@ -9,6 +9,7 @@ class User < ApplicationRecord
 
   has_many :events_users, dependent: :destroy
   has_many :events, through: :events_users, source: :event
+  has_many :invites, dependent: :destroy
 
   def events_hosting
     created = []
@@ -24,6 +25,13 @@ class User < ApplicationRecord
       attending << event if event.creator != self
     end
     attending
+  end
+
+  def accept_invite(event)
+    invite = Invite.find_by(user: self, event: event)
+    return if invite.nil?
+    events << event
+    invite.destroy
   end
 
   def first_name_must_be_capitalized

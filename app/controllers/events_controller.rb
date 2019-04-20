@@ -62,6 +62,19 @@ class EventsController < ApplicationController
     end
   end
 
+  # POST events/1/invite
+  def invite_user
+    respond_to do |format|
+      if @event.invite_user
+        format.html { redirect_back fallback_location: @event, notice: 'User was successfully invited.' }
+        format.json { head :no_content }
+      else
+        format.html { redirect_back fallback_location: @event, error: 'An error happened while inviting the user' }
+        format.json { head :no_content }
+      end
+    end
+  end
+
   private
 
   # Use callbacks to share common setup or constraints between actions.

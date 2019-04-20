@@ -20,11 +20,11 @@ class UsersController < ApplicationController
 
   # GET /users/1/edit
   def edit
-    unless @user == current_user
-      respond_to do |format|
-        format.html { redirect_back fallback_location: root_path, error: 'You can only edit your own account.' }
-        format.json { render json: @user.errors, status: :unprocessable_entity }
-      end
+    return if @user == current_user
+
+    respond_to do |format|
+      format.html { redirect_back fallback_location: root_path, error: 'You can only edit your own account.' }
+      format.json { render json: @user.errors, status: :unprocessable_entity }
     end
   end
 

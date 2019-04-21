@@ -30,6 +30,7 @@ class User < ApplicationRecord
   def accept_invite(event)
     invite = Invite.find_by(user: self, event: event)
     return if invite.nil?
+
     events << event
     invite.destroy
   end

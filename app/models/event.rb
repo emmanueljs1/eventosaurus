@@ -11,6 +11,7 @@ class Event < ApplicationRecord
 
   def invite_user(user)
     return false if Invite.exists?(user: user, event: self)
+
     invite = Invite.new(user: user, event: self)
     invite.save
   end

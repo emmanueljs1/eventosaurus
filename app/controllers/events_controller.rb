@@ -48,7 +48,7 @@ class EventsController < ApplicationController
   # PATCH/PUT /events/1.json
   def update
     respond_to do |format|
-      if current_user == @event.creator  
+      if current_user == @event.creator
         if @event.update(event_params)
           format.html { redirect_to @event, notice: 'Event was successfully updated.' }
           format.json { render :show, status: :ok, location: @event }
@@ -70,11 +70,10 @@ class EventsController < ApplicationController
       if current_user == @event.creator
         @event.destroy
         format.html { redirect_to events_url, notice: 'Event was successfully destroyed.' }
-        format.json { head :no_content }
       else
         format.html { redirect_to @event, notice: 'You can only delete an event you created.' }
-        format.json { head :no_content }
       end
+      format.json { head :no_content }
     end
   end
 
@@ -83,11 +82,10 @@ class EventsController < ApplicationController
     respond_to do |format|
       if @event.invite_user
         format.html { redirect_back fallback_location: @event, notice: 'User was successfully invited.' }
-        format.json { head :no_content }
       else
         format.html { redirect_back fallback_location: @event, error: 'An error happened while inviting the user' }
-        format.json { head :no_content }
       end
+      format.json { head :no_content }
     end
   end
 

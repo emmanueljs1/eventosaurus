@@ -1,7 +1,13 @@
 <div class="row">
   <div class="col">
-    <div class="row"><h1>Events</h1></div>
-    <% @events.each do |event| %>
+    <div class="row">
+      <div class="col">
+        <h1 style="text-align: center">Events</h1>
+      </div>
+    </div>
+    <% if logged_in? %>
+    <div class="row"><h4>Your events:</h4></div>
+    <% current_user.events_hosting.each do |event| %>
       <div class="row" style="margin-top: 5px; margin-bottom: 5px;">
         <div class="col card">
           <div class="card-body" id=<%= "event_#{event.id}" %>>
@@ -12,25 +18,46 @@
             <h6>Location: <%= event.location %></h6>
             <h6>Date: <%= event.date %></h6>
             <h6>Creator: <%= link_to event.creator.full_name, event.creator %></h6>
-            <% if logged_in? %>
-              <% if current_user == event.creator %>
-                <%= link_to 'Edit event', edit_event_path(event), class: 'btn btn-secondary' %>
-                <%= link_to 'Delete event', event, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
-              <% else %>
-                <!-- logic for 'going' -->
-              <% end %>
-            <% end %>
+            <%= link_to 'Edit event', edit_event_path(event), class: 'btn btn-secondary' %>
+            <%= link_to 'Delete event', event, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
           </div>
         </div>
       </div>
     <% end %>
-    <br>
-    <br>
-    <div class="row">
-      <div class="col">
-        <%= link_to 'New Event', new_event_path, class: 'btn btn-success' %>
-      </div>
-    </div>
+    <div class="row"><h4>Other events:</h4></div>
+      <% (@events - current_user.events_hosting).each do |event| %>
+        <div class="row" style="margin-top: 5px; margin-bottom: 5px;">
+          <div class="col card">
+            <div class="card-body" id=<%= "event_#{event.id}" %>>
+              <h4 class="card-title"><%= link_to event.title, event %></h4>
+              <p class="card-text">
+                <%= event.description %>
+              </p>
+              <h6>Location: <%= event.location %></h6>
+              <h6>Date: <%= event.date %></h6>
+              <h6>Creator: <%= link_to event.creator.full_name, event.creator %></h6>
+              <!-- TODO: logic for 'going' -->
+            </div>
+          </div>
+        </div>
+      <% end %>
+    <% else %>
+      <% @events.each do |event| %>
+        <div class="row" style="margin-top: 5px; margin-bottom: 5px;">
+          <div class="col card">
+            <div class="card-body" id=<%= "event_#{event.id}" %>>
+              <h4 class="card-title"><%= link_to event.title, event %></h4>
+              <p class="card-text">
+                <%= event.description %>
+              </p>
+              <h6>Location: <%= event.location %></h6>
+              <h6>Date: <%= event.date %></h6>
+              <h6>Creator: <%= link_to event.creator.full_name, event.creator %></h6>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
   </div>
 </div>
 

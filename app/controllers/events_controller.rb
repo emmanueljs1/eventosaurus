@@ -1,6 +1,6 @@
 class EventsController < ApplicationController
   before_action :set_event, only: [:show, :edit, :update, :destroy]
-  before_action :authenticate_user, only: [:create, :edit, :update, :destroy]
+  before_action :authenticate_user, only: [:new, :create, :edit, :update, :destroy]
 
   # GET /events
   # GET /events.json
@@ -20,6 +20,12 @@ class EventsController < ApplicationController
 
   # GET /events/1/edit
   def edit
+    return if @event.creator == current_user
+
+    respond_to do |format|
+      format.html { redirect_back fallback_location: root_path, error: 'You can only edit an event you created.' }
+      format.json { render json: @event.errors, status: :unprocessable_entity }
+    end
   end
 
   # POST /events
@@ -42,11 +48,16 @@ class EventsController < ApplicationController
   # PATCH/PUT /events/1.json
   def update
     respond_to do |format|
-      if @event.update(event_params)
-        format.html { redirect_to @event, notice: 'Event was successfully updated.' }
-        format.json { render :show, status: :ok, location: @event }
+      if current_user == @event.creator  
+        if @event.update(event_params)
+          format.html { redirect_to @event, notice: 'Event was successfully updated.' }
+          format.json { render :show, status: :ok, location: @event }
+        else
+          format.html { render :edit }
+          format.json { render json: @event.errors, status: :unprocessable_entity }
+        end
       else
-        format.html { render :edit }
+        format.html { redirect_to @event, error: 'You can only update an event you created.' }
         format.json { render json: @event.errors, status: :unprocessable_entity }
       end
     end
@@ -55,10 +66,15 @@ class EventsController < ApplicationController
   # DELETE /events/1
   # DELETE /events/1.json
   def destroy
-    @event.destroy
     respond_to do |format|
-      format.html { redirect_to events_url, notice: 'Event was successfully destroyed.' }
-      format.json { head :no_content }
+      if current_user == @event.creator
+        @event.destroy
+        format.html { redirect_to events_url, notice: 'Event was successfully destroyed.' }
+        format.json { head :no_content }
+      else
+        format.html { redirect_to @event, notice: 'You can only delete an event you created.' }
+        format.json { head :no_content }
+      end
     end
   end
 

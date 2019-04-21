@@ -1,7 +1,29 @@
 <div class="row">
   <div class="col">
-    <div class="row"><h1>Users</h1></div>
-    <% @users.each do |user| %>
+    <div class="row">
+      <div class="col">
+        <h1 style="text-align: center">Users</h1>
+      </div>
+    </div>
+    <% if logged_in? %>
+    <div class="row"><h4>Your account:</h4></div>
+    <div class="row" style="margin-top: 5px; margin-bottom: 5px">
+      <div class="col card">
+        <div class="card-body" id=<%= "user_#{current_user.id}" %>>
+          <div class="row">
+            <h5 class="card-title"><%= link_to current_user.full_name, current_user %></h5>
+          </div>
+          <div class="row"><%= current_user.email %></div>
+          <div class="row" style="margin-top: 5px;">
+            <%= link_to 'Edit account', edit_user_path(current_user), class: 'btn btn-secondary' %>&nbsp;
+            <%= link_to 'Delete account', current_user, method: :delete, class: 'btn btn-danger', data: { confirm: 'Are you sure?' } %>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row"><h4>Other accounts:</h4></div>
+    <% end %>
+    <% (@users - [current_user]).each do |user| %>
       <div class="row" style="margin-top: 5px; margin-bottom: 5px">
         <div class="col card">
           <div class="card-body" id=<%= "user_#{user.id}" %>>
@@ -9,12 +31,6 @@
               <h5 class="card-title"><%= link_to user.full_name, user %></h5>
             </div>
             <div class="row"><%= user.email %></div>
-            <div class="row" style="margin-top: 5px;">
-              <% if logged_in? && current_user == user %>
-                <%= link_to 'Edit account', edit_user_path(user), class: 'btn btn-secondary' %>&nbsp;
-                <%= link_to 'Delete account', user, method: :delete, class: 'btn btn-danger', data: { confirm: 'Are you sure?' } %>
-              <% end %>
-            </div>
           </div>
         </div>
       </div>

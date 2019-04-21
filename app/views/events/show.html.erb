@@ -1,22 +1,48 @@
-<p>
-  <strong>Title:</strong>
-  <%= @event.title %>
-</p>
-
-<p>
-  <strong>Description:</strong>
-  <%= @event.description %>
-</p>
-
-<p>
-  <strong>Location:</strong>
-  <%= @event.location %>
-</p>
-
-<p>
-  <strong>Date:</strong>
-  <%= @event.date %>
-</p>
-
-<%= link_to 'Edit', edit_event_path(@event) %> |
-<%= link_to 'Back', events_path %>
+<div class="row" style="margin-top: 5px;">
+  <div class="col">
+    <div class="row"><div class="col"><h1><%= @event.title %></h1></div></div>
+    <div class="row" style="margin-top: 5px;">
+      <div class="col card">
+        <div class="card-body">
+          <p class="card-text">
+            <%= @event.description %>
+          </p>
+          <h6>Location: <%= @event.location %></h6>
+          <h6>Date: <%= @event.date %></h6>
+          <h6>Creator: <%= link_to @event.creator.full_name, @event.creator %></h6>
+          <% if logged_in? %>
+            <% if current_user == @event.creator %>
+            <%= link_to 'Edit event', edit_event_path(@event), class: 'btn btn-secondary' %>
+            <%= link_to 'Delete event', @event, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
+            <% else %>
+            <!-- TODO: going logic -->
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    <div class="row" style="margin-top: 5px;">
+      <div class="col card">
+        <div class="card-body">
+          <h6>People Going:</h6>
+          <ul>
+            <% @event.attendees.each do |attendee| %>
+            <li><%= link_to attendee.full_name, attendee %></li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="row" style="margin-top: 5px;">
+      <div class="col card">
+        <div class="card-body">
+          <h6>Invite User</h6>
+          <%= form_with url: "/event/#{@event.id}/invite" do |form| %>
+            <%= form.collection_select :user_id, @users - @event.attendees, :id, :full_name, {:include_blank => true}, {:class => 'form-control'} %>
+            <%= form.submit 'Invite', class: 'btn btn-success btn-sm', style: 'margin-top: 10px;' %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

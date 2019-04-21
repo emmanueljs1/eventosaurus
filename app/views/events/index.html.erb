@@ -2,21 +2,20 @@
   <div class="col">
     <div class="row"><h1>Events</h1></div>
     <% @events.each do |event| %>
-      <div class="row">
+      <div class="row" style="margin-top: 5px; margin-bottom: 5px;">
         <div class="col card">
-          <div class="card-body">
-            <h4 class="card-title"><%= event.title %></h4>
+          <div class="card-body" id=<%= "event_#{event.id}" %>>
+            <h4 class="card-title"><%= link_to event.title, event %></h4>
             <p class="card-text">
               <%= event.description %>
             </p>
             <h6>Location: <%= event.location %></h6>
             <h6>Date: <%= event.date %></h6>
             <h6>Creator: <%= link_to event.creator.full_name, event.creator %></h6>
-            <%= link_to 'Show', event, class: 'btn btn-primary' %>
             <% if logged_in? %>
-              <% if session[:user_id] == event.creator.id %>
-                <%= link_to 'Edit', edit_event_path(event), class: 'btn btn-secondary' %>
-                <%= link_to 'Destroy', event, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
+              <% if current_user == event.creator %>
+                <%= link_to 'Edit event', edit_event_path(event), class: 'btn btn-secondary' %>
+                <%= link_to 'Delete event', event, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
               <% else %>
                 <!-- logic for 'going' -->
               <% end %>

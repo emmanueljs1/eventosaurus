@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col margin-5">
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <a class="navbar-brand" href="/">Events App</a>
+    <nav class="navbar navbar-expand-lg navbar-light bg-secondary">
+      <a class="navbar-brand text-white" style="font-family: 'Courier New', Courier, monospace;" href="/"><b>eventosaurus</b></a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -9,22 +9,43 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item">
-            <%= link_to 'All Users', '/users', class: 'nav-link' %>
+            <a href="/events" class="nav-link text-white">
+              <i class="fas fa-calendar-week"></i> Events
+            </a>
           </li>
           <li class="nav-item">
-            <%= link_to 'All Events', '/events', class: 'nav-link' %>
+            <a href="/users" class="nav-link text-white">
+              <i class="fas fa-users"></i> Users
+            </a>
           </li>
-          <li class="nav-item">
-            <%= link_to 'New Event', '/events/new', class: 'nav-link' %>
-          </li>
-
-          <% if logged_in? %>
-            <li class="nav-item"><%= link_to 'Log out', '/logout', method: :delete, class: 'nav-link' %></li>
-          <% else %>
-            <li class="nav-item"><%= link_to 'Sign up', new_user_path, class: 'nav-link' %></li>
-            <li class="nav-item"><%= link_to 'Log in', '/login', class: 'nav-link' %></li>
-          <% end %>
-          
+        </ul>
       </div>
-    </div>
+
+      <div class="collapse navbar-collapse justify-content-end">
+        <ul class="navbar-nav">
+          <% if logged_in? %>
+          <li class="nav-item">
+            <%= link_to 'New Event', '/events/new', class: 'nav-link text-white' %>
+          </li>
+          &nbsp;
+          <% end %>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <i class="fas fa-user"></i>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+              <% if logged_in? %>
+              <div class="dropdown-item"><%= link_to 'Account', current_user, class: 'nav-link' %></div>
+              <div class="dropdown-item"><%= link_to 'Log out', '/logout', method: :delete, class: 'nav-link' %></div>
+              <% else %>
+              <div class="dropdown-item"><%= link_to 'Sign up', new_user_path, class: 'nav-link' %></div>
+              <div class="dropdown-divider"></div>
+              <div class="dropdown-item"><%= link_to 'Log in', '/login', class: 'nav-link text' %></div>
+              <% end %>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </nav>
   </div>
+</div>

@@ -2,15 +2,20 @@
   <div class="col">
     <div class="row"><h1>Users</h1></div>
     <% @users.each do |user| %>
-      <div class="row">
-        <div class="col">
-          <h5><%= user.full_name %></h5>
-          <%= user.email %>
-          <%= link_to 'Show', user, class: 'btn btn-primary' %>
-          <%= link_to 'Edit', edit_user_path(user), class: 'btn btn-secondary' %>
-          <% if logged_in? && session[:user_id] == user.id %>
-            <%= link_to 'Destroy', user, method: :delete, class: 'btn btn-danger', data: { confirm: 'Are you sure?' } %>
-          <% end %>
+      <div class="row" style="margin-top: 5px; margin-bottom: 5px">
+        <div class="col card">
+          <div class="card-body" id=<%= "user_#{user.id}" %>>
+            <div class="row">
+              <h5 class="card-title"><%= link_to user.full_name, user %></h5>
+            </div>
+            <div class="row"><%= user.email %></div>
+            <div class="row" style="margin-top: 5px;">
+              <% if logged_in? && current_user == user %>
+                <%= link_to 'Edit account', edit_user_path(user), class: 'btn btn-secondary' %>&nbsp;
+                <%= link_to 'Delete account', user, method: :delete, class: 'btn btn-danger', data: { confirm: 'Are you sure?' } %>
+              <% end %>
+            </div>
+          </div>
         </div>
       </div>
     <% end %>

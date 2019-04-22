@@ -7,58 +7,74 @@
     </div>
     <% if logged_in? %>
     <div class="row"><h4>Your events:</h4></div>
-    <% current_user.events_hosting.each do |event| %>
-      <div class="row" style="margin-top: 5px; margin-bottom: 5px;">
-        <div class="col card">
-          <div class="card-body" id=<%= "event_#{event.id}" %>>
-            <h4 class="card-title"><%= link_to event.title, event %></h4>
-            <p class="card-text">
-              <%= event.description %>
-            </p>
-            <h6>Location: <%= event.location %></h6>
-            <h6>Date: <%= event.date.strftime("%B %d, %Y") %></h6>
-            <h6>Time: <%= event.date.strftime("%l:%M %P") %></h6>
-            <h6>Creator: <%= link_to event.creator.full_name, event.creator %></h6>
-            <%= link_to 'Edit event', edit_event_path(event), class: 'btn btn-secondary' %>
-            <%= link_to 'Delete event', event, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
-          </div>
-        </div>
-      </div>
-    <% end %>
-    <div class="row"><h4>Other events:</h4></div>
-      <% (@events - current_user.events_hosting).each do |event| %>
-        <div class="row" style="margin-top: 5px; margin-bottom: 5px;">
-          <div class="col card">
-            <div class="card-body" id=<%= "event_#{event.id}" %>>
-              <h4 class="card-title"><%= link_to event.title, event %></h4>
-              <p class="card-text">
-                <%= event.description %>
-              </p>
-              <h6>Location: <%= event.location %></h6>
-              <h6>Date: <%= event.date.strftime("%B %d, %Y") %></h6>
-              <h6>Time: <%= event.date.strftime("%l:%M %P") %></h6>
-              <h6>Creator: <%= link_to event.creator.full_name, event.creator %></h6>
-              <!-- TODO: logic for 'going' -->
+      <% if current_user.events_hosting.empty? %>
+      <div class="row"><h6>You haven't made any events yet. <%= link_to 'Why not make one?', '/events/new' %></h6></div>
+      <% else %>
+        <% current_user.events_hosting.each do |event| %>
+          <div class="row" style="margin-top: 5px; margin-bottom: 5px;">
+            <div class="col card">
+              <div class="card-body" id=<%= "event_#{event.id}" %>>
+                <h4 class="card-title"><%= link_to event.title, event %></h4>
+                <p class="card-text">
+                  <%= event.description %>
+                </p>
+                <h6>Location: <%= event.location %></h6>
+                <h6>Date: <%= event.date.strftime("%B %d, %Y") %></h6>
+                <h6>Time: <%= event.date.strftime("%l:%M %P") %></h6>
+                <h6>Creator: <%= link_to event.creator.full_name, event.creator %></h6>
+                <%= link_to 'Edit event', edit_event_path(event), class: 'btn btn-secondary' %>
+                <%= link_to 'Delete event', event, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
+              </div>
             </div>
           </div>
-        </div>
+        <% end %>
+      <% end %>
+    <div class="row"><h4>Other events:</h4></div>
+      <% if (@events - current_user.events_hosting).empty? %>
+        <div class="row"><h6>There are no other events yet. Tell another user to make one!</h6></div>
+      <% else %>
+        <% (@events - current_user.events_hosting).each do |event| %>
+          <div class="row" style="margin-top: 5px; margin-bottom: 5px;">
+            <div class="col card">
+              <div class="card-body" id=<%= "event_#{event.id}" %>>
+                <h4 class="card-title"><%= link_to event.title, event %></h4>
+                <p class="card-text">
+                  <%= event.description %>
+                </p>
+                <h6>Location: <%= event.location %></h6>
+                <h6>Date: <%= event.date.strftime("%B %d, %Y") %></h6>
+                <h6>Time: <%= event.date.strftime("%l:%M %P") %></h6>
+                <h6>Creator: <%= link_to event.creator.full_name, event.creator %></h6>
+                <!-- TODO: logic for 'going' -->
+              </div>
+            </div>
+          </div>
+        <% end %>
       <% end %>
     <% else %>
-      <% @events.each do |event| %>
-        <div class="row" style="margin-top: 5px; margin-bottom: 5px;">
-          <div class="col card">
-            <div class="card-body" id=<%= "event_#{event.id}" %>>
-              <h4 class="card-title"><%= link_to event.title, event %></h4>
-              <p class="card-text">
-                <%= event.description %>
-              </p>
-              <h6>Location: <%= event.location %></h6>
-              <h6>Date: <%= event.date.strftime("%B %d, %Y") %></h6>
-              <h6>Time: <%= event.date.strftime("%l:%M %P") %></h6>
-              <h6>Creator: <%= link_to event.creator.full_name, event.creator %></h6>
-            </div>
+      <% if @events.empty? %>
+        <div class="row">
+          <div class="col">
+            <h6 style="text-align: center">There are no events yet. <%= link_to 'Why not sign up and make an event?', new_user_path %></h6>
           </div>
         </div>
+      <% else %>
+        <% @events.each do |event| %>
+          <div class="row" style="margin-top: 5px; margin-bottom: 5px;">
+            <div class="col card">
+              <div class="card-body" id=<%= "event_#{event.id}" %>>
+                <h4 class="card-title"><%= link_to event.title, event %></h4>
+                <p class="card-text">
+                  <%= event.description %>
+                </p>
+                <h6>Location: <%= event.location %></h6>
+                <h6>Date: <%= event.date.strftime("%B %d, %Y") %></h6>
+                <h6>Time: <%= event.date.strftime("%l:%M %P") %></h6>
+                <h6>Creator: <%= link_to event.creator.full_name, event.creator %></h6>
+              </div>
+            </div>
+          </div>
+        <% end %>
       <% end %>
     <% end %>
   </div>

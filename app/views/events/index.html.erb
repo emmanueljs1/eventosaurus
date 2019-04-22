@@ -16,7 +16,8 @@
               <%= event.description %>
             </p>
             <h6>Location: <%= event.location %></h6>
-            <h6>Date: <%= event.date %></h6>
+            <h6>Date: <%= event.date.strftime("%B %d, %Y") %></h6>
+            <h6>Time: <%= event.date.strftime("%l:%M %P") %></h6>
             <h6>Creator: <%= link_to event.creator.full_name, event.creator %></h6>
             <%= link_to 'Edit event', edit_event_path(event), class: 'btn btn-secondary' %>
             <%= link_to 'Delete event', event, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
@@ -34,7 +35,8 @@
                 <%= event.description %>
               </p>
               <h6>Location: <%= event.location %></h6>
-              <h6>Date: <%= event.date %></h6>
+              <h6>Date: <%= event.date.strftime("%B %d, %Y") %></h6>
+              <h6>Time: <%= event.date.strftime("%l:%M %P") %></h6>
               <h6>Creator: <%= link_to event.creator.full_name, event.creator %></h6>
               <!-- TODO: logic for 'going' -->
             </div>
@@ -51,7 +53,8 @@
                 <%= event.description %>
               </p>
               <h6>Location: <%= event.location %></h6>
-              <h6>Date: <%= event.date %></h6>
+              <h6>Date: <%= event.date.strftime("%B %d, %Y") %></h6>
+              <h6>Time: <%= event.date.strftime("%l:%M %P") %></h6>
               <h6>Creator: <%= link_to event.creator.full_name, event.creator %></h6>
             </div>
           </div>

@@ -8,7 +8,8 @@
             <%= @event.description %>
           </p>
           <h6>Location: <%= @event.location %></h6>
-          <h6>Date: <%= @event.date %></h6>
+          <h6>Date: <%= @event.date.strftime("%B %d, %Y") %></h6>
+          <h6>Time: <%= @event.date.strftime("%l:%M %P") %></h6>
           <h6>Creator: <%= link_to @event.creator.full_name, @event.creator %></h6>
           <% if logged_in? %>
             <% if current_user == @event.creator %>

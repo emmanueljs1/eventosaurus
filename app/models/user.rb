@@ -9,7 +9,8 @@ class User < ApplicationRecord
 
   has_many :events_users, dependent: :destroy
   has_many :events, through: :events_users, source: :event
-  has_many :invites, dependent: :destroy
+  has_many :invites_received, class_name: 'Invite', foreign_key: 'invitee_id', dependent: :destroy
+  has_many :invites_sent, class_name: 'Invite', foreign_key: 'inviter_id', dependent: :destroy
 
   def events_hosting
     created = []
@@ -28,7 +29,7 @@ class User < ApplicationRecord
   end
 
   def accept_invite(event)
-    invite = Invite.find_by(user: self, event: event)
+    invite = Invite.find_by(invitee: self, event: event)
     return if invite.nil?
 
     events << event

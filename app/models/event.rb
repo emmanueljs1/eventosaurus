@@ -10,13 +10,15 @@ class Event < ApplicationRecord
   end
 
   def invitees
-    invites.map { |invite| invite.user }
+    invites.map { |invite| invite.invitee }
   end
 
-  def invite_user(user)
-    return false if Invite.exists?(user: user, event: self)
+  def invite_user(inviter, invitee)
+    return false if Invite.exists?(inviter: inviter, invitee: invitee, event: self)
 
-    invite = Invite.new(user: user, event: self)
+    invite = Invite.new(inviter: inviter, invitee: invitee, event: self)
+    inviter.invites_sent << invite
+    invitee.invites_received << invite
     invite.save
   end
 end

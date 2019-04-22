@@ -8,9 +8,9 @@
   <%= @user.email %>
 </p>
 
-<% @user.invites.each do |invite| %>
+<% @user.invites_received.each do |invite| %>
   <p>
-    - Is invited to <%= link_to invite.event.title, invite.event %>
+    - <%= link_to invite.inviter.full_name, invite.inviter %> invited <%= invite.invitee.full_name %> to <%= link_to invite.event.title, invite.event %>
   </p>
 <% end %>
 

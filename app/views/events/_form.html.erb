@@ -11,27 +11,27 @@
     </div>
   <% end %>
 
-  <div class="field">
+  <div class="form-group">
     <%= form.label :title %>
-    <%= form.text_field :title, id: :event_title %>
+    <%= form.text_field :title, id: :event_title, class: 'form-control' %>
   </div>
 
-  <div class="field">
+  <div class="form-group">
     <%= form.label :description %>
-    <%= form.text_area :description, id: :event_description %>
+    <%= form.text_area :description, id: :event_description, class: 'form-control' %>
   </div>
 
-  <div class="field">
+  <div class="form-group">
     <%= form.label :location %>
-    <%= form.text_field :location, id: :event_location %>
+    <%= form.text_field :location, id: :event_location, class: 'form-control' %>
   </div>
 
-  <div class="field">
+  <div class="form-group">
     <%= form.label :date %>
-    <%= form.datetime_select :date, id: :event_date %>
+    <%= form.datetime_select :date, order: [:month, :day, :year, :hour, :minute], ampm: true, datetime_separator: ' Time ', prompt: {day: 'Day', month: 'Month', year: 'Year'}, id: :event_date, class: 'form-control' %>
   </div>
 
   <div class="actions">
-    <%= form.submit %>
+    <%= form.submit 'Submit', class: 'btn btn-primary' %>
   </div>
 <% end %>

@@ -1,5 +1,5 @@
 class EventsController < ApplicationController
-  before_action :set_event, only: [:show, :edit, :update, :destroy]
+  before_action :set_event, only: [:show, :edit, :update, :destroy, :invite_user]
   before_action :authenticate_user, only: [:new, :create, :edit, :update, :destroy]
 
   # GET /events
@@ -81,7 +81,8 @@ class EventsController < ApplicationController
   # POST events/1/invite
   def invite_user
     respond_to do |format|
-      if @event.invite_user
+      user = User.find(params[:user_id])
+      if @event.invite_user(user)
         format.html { redirect_back fallback_location: @event, notice: 'User was successfully invited.' }
       else
         format.html { redirect_back fallback_location: @event, error: 'An error happened while inviting the user' }

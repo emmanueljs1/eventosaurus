@@ -9,6 +9,10 @@ class Event < ApplicationRecord
     attendees[0]
   end
 
+  def invitees
+    invites.map { |invite| invite.user }
+  end
+
   def invite_user(user)
     return false if Invite.exists?(user: user, event: self)
 

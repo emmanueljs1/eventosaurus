@@ -8,5 +8,11 @@
   <%= @user.email %>
 </p>
 
+<% @user.invites.each do |invite| %>
+  <p>
+    - Is invited to <%= link_to invite.event.title, invite.event %>
+  </p>
+<% end %>
+
 <%= link_to 'Edit', edit_user_path(@user) %> |
 <%= link_to 'Back', users_path %>

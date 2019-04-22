@@ -36,10 +36,22 @@
     </div>
     <div class="row" style="margin-top: 5px;">
       <div class="col card">
+        <div class="card-body" id="event-invitees">
+          <h6>People Invited:</h6>
+          <ul>
+            <% @event.invitees.each do |invitee| %>
+            <li><%= link_to invitee.full_name, invitee %></li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="row" style="margin-top: 5px;">
+      <div class="col card">
         <div class="card-body">
           <h6>Invite User</h6>
-          <%= form_with url: "/event/#{@event.id}/invite" do |form| %>
-            <%= form.collection_select :user_id, @users - @event.attendees, :id, :full_name, {:include_blank => true}, {:class => 'form-control'} %>
+          <%= form_with url: "/events/#{@event.id}/invite" do |form| %>
+            <%= form.collection_select :user_id, @users - @event.attendees - @event.invitees, :id, :full_name, {:include_blank => true}, {:class => 'form-control'} %>
             <%= form.submit 'Invite', class: 'btn btn-success btn-sm', style: 'margin-top: 10px;' %>
           <% end %>
         </div>

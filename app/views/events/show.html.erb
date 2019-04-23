@@ -48,7 +48,7 @@
     </div>
     <div class="row" style="margin-top: 5px;">
       <div class="col card">
-        <div class="card-body">
+        <div class="card-body" id="invite-user">
           <h6>Invite User</h6>
           <%= form_with url: "/events/#{@event.id}/invite" do |form| %>
             <%= form.collection_select :user_id, @users - @event.attendees - @event.invitees, :id, :full_name, {:include_blank => true}, {:class => 'form-control'} %>

@@ -10,7 +10,7 @@ class Event < ApplicationRecord
   end
 
   def invitees
-    invites.map { |invite| invite.invitee }
+    invites.map(&:invitee)
   end
 
   def invite_user(inviter, invitee)

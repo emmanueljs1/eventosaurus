@@ -14,7 +14,7 @@ class Event < ApplicationRecord
   end
 
   def invite_user(inviter, invitee)
-    return false if Invite.exists?(inviter: inviter, invitee: invitee, event: self)
+    return false if Invite.exists?(invitee: invitee, event: self) || attendees.include?(invitee)
 
     invite = Invite.new(inviter: inviter, invitee: invitee, event: self)
     inviter.invites_sent << invite

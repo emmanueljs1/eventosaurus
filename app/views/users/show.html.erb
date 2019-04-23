@@ -1,18 +1,76 @@
-<p>
-  <strong>Full name:</strong>
-  <%= @user.full_name %>
-</p>
-
-<p>
-  <strong>Email:</strong>
-  <%= @user.email %>
-</p>
-
-<% @user.invites_received.each do |invite| %>
-  <p>
-    - <%= link_to invite.inviter.full_name, invite.inviter %> invited <%= invite.invitee.full_name %> to <%= link_to invite.event.title, invite.event %>
-  </p>
-<% end %>
-
-<%= link_to 'Edit', edit_user_path(@user) %> |
-<%= link_to 'Back', users_path %>
+<div class="row">
+  <div class="col">
+    <div class="row"><h1><%= @user.full_name %></h1></div>
+    <div class="row" style="margin-top: 5px;">
+      <div class="col card">
+        <div class="card-body">
+          <h6 style="margin-top: 8px;">Email: <%= mail_to @user.email %></h6>
+          <% if current_user == @user %>
+            <%= link_to 'Edit account', edit_user_path(current_user), class: 'btn btn-secondary', style: 'margin-bottom: 5px' %>&nbsp;
+            <%= link_to 'Delete account', current_user, method: :delete, class: 'btn btn-danger', style: 'margin-bottom: 5px', data: { confirm: 'Are you sure?' } %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    <div class="row" style="margin-top: 5px;">
+      <div class="col card">
+        <div class="card-body" id="events-created">
+          <h6>Events Created:</h6>
+          <ul style="margin-bottom: 0px">
+            <% if @user.events_hosting.empty? %>
+              <% if current_user == @user %>
+                <li>You have not created any events. <%= link_to "Make one?", new_event_path %></li>
+              <% else %>
+                <li><%= @user.first_name %> is not hosting any events.</li>
+              <% end %>
+            <% else %>   
+              <% @user.events_hosting.each do |event| %>
+              <li><%= link_to event.title, event %></li>
+              <% end %>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="row" style="margin-top: 5px;">
+      <div class="col card">
+        <div class="card-body" id="events-attending">
+          <h6>Events Attending:</h6>
+          <ul style="margin-bottom: 0px">
+            <% if @user.events_attending.empty? %>
+              <% if current_user == @user %>
+                <li>You are not attending any events you didn't create. <%= link_to "Mark 'Going' to one?", events_path %></li>
+              <% else %>
+                <li><%= @user.first_name %> is not attending any events they didn't create. <%= link_to "Invite them to an event?", events_path %></li>
+              <% end %>
+            <% else %>
+              <% @user.events_attending.each do |event| %>
+              <li><%= link_to event.title, event %></li>
+              <% end %>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="row" style="margin-top: 5px;">
+      <div class="col card">
+        <div class="card-body" id="invites-pending">
+          <h6>Invites Pending:</h6>
+          <ul style="margin-bottom: 0px">
+            <% if @user.invites_received.empty? %>
+              <% if current_user == @user %>
+                <li>You have no invites yet. <%= link_to 'Ask a friend to invite you to an event?', users_path %></li>
+              <% else %>
+                <li><%= @user.first_name %> has not been invited to any events. <%= link_to "Invite them to an event?", events_path %></li>
+              <% end %>
+            <% else %>
+              <% @user.invites_received.each do |invite| %>
+              <li><%= link_to invite.inviter.full_name, invite.inviter %> invited <%= @user.first_name %> to <%= link_to invite.event.title, invite.event %></li>
+              <% end %>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

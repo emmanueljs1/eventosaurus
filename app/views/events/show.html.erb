@@ -1,6 +1,6 @@
-<div class="row" style="margin-top: 5px;">
+<div class="row">
   <div class="col">
-    <div class="row"><div class="col"><h1><%= @event.title %></h1></div></div>
+    <div class="row"><h1><%= @event.title %></h1></div>
     <div class="row" style="margin-top: 5px;">
       <div class="col card">
         <div class="card-body">
@@ -26,7 +26,7 @@
       <div class="col card">
         <div class="card-body" id="event-attendees">
           <h6>People Going:</h6>
-          <ul>
+          <ul style="margin-bottom: 0px">
             <% @event.attendees.each do |attendee| %>
             <li><%= link_to attendee.full_name, attendee %></li>
             <% end %>
@@ -38,7 +38,7 @@
       <div class="col card">
         <div class="card-body" id="event-invitees">
           <h6>People Invited:</h6>
-          <ul>
+          <ul style="margin-bottom: 0px">
             <% @event.invitees.each do |invitee| %>
             <li><%= link_to invitee.full_name, invitee %></li>
             <% end %>

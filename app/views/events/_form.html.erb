@@ -31,7 +31,7 @@
 
   <div class="form-group">
     <%= form.label :date %>
-    <%= form.datetime_select :date, order: [:month, :day, :year, :hour, :minute], ampm: true, datetime_separator: ' Time ', prompt: {day: 'Day', month: 'Month', year: 'Year'}, id: :event_date, class: 'form-control' %>
+    <%= form.datetime_field :date, order: [:month, :day, :year, :hour, :minute], ampm: true, id: :event_date, class: 'form-control' %>
   </div>
 
   <div class="actions">

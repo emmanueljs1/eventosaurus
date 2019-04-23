@@ -30,7 +30,7 @@
         <% end %>
       <% end %>
     <div class="row"><h4>Other events:</h4></div>
-      <% if (@events - current_user.events_hosting).empty? %>
+      <% if (@events.order(:date) - current_user.events_hosting).empty? %>
         <div class="row"><h6>There are no other events yet. Tell another user to make one!</h6></div>
       <% else %>
         <% (@events - current_user.events_hosting).each do |event| %>

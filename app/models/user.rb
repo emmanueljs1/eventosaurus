@@ -14,7 +14,7 @@ class User < ApplicationRecord
 
   def events_hosting
     created = []
-    events.each do |event|
+    events.order(date: :desc).each do |event|
       created << event if event.creator == self
     end
     created
@@ -22,7 +22,7 @@ class User < ApplicationRecord
 
   def events_attending
     attending = []
-    events.each do |event|
+    events.order(date: :desc).each do |event|
       attending << event if event.creator != self
     end
     attending

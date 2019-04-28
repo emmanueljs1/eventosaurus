@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: [:show, :edit, :update, :destroy]
-  before_action :authenticate_user, except: [:index, :show, :new, :create]
+  before_action :set_user, only: [:show, :edit, :update, :destroy, :accept_invite]
+  before_action :authenticate_user, except: [:index, :show, :new, :create, :accept_invite]
 
   # GET /users
   # GET /users.json
@@ -76,6 +76,22 @@ class UsersController < ApplicationController
         format.json { head :no_content }
       else
         format.html { redirect_to users_url, error: 'You can only destroy your own account.' }
+        format.json { render json: @user.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  # POST /users/1/accept_invite
+  # POST /users/1/accept_invite.json
+  def accept_invite
+    respond_to do |format|
+      if @user == current_user
+        event = Event.find(params[:event_id])
+        @user.accept_invite(event)
+        format.html { redirect_to @user, notice: "Successfully accepted invite to #{event.title}." }
+        format.json { render :show, status: :ok, location: @user }
+      else
+        format.html { redirect_to users_url, error: 'You can only accept invites you received.' }
         format.json { render json: @user.errors, status: :unprocessable_entity }
       end
     end

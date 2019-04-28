@@ -25,7 +25,7 @@
               <% end %>
             <% else %>   
               <% @user.events_hosting.each do |event| %>
-              <li><%= link_to event.title, event %></li>
+                <li><%= link_to event.title, event %></li>
               <% end %>
             <% end %>
           </ul>
@@ -45,7 +45,7 @@
               <% end %>
             <% else %>
               <% @user.events_attending.each do |event| %>
-              <li><%= link_to event.title, event %></li>
+                <li><%= link_to event.title, event %></li>
               <% end %>
             <% end %>
           </ul>
@@ -65,7 +65,13 @@
               <% end %>
             <% else %>
               <% @user.invites_received.each do |invite| %>
-              <li><%= link_to invite.inviter.full_name, invite.inviter %> invited <%= @user.first_name %> to <%= link_to invite.event.title, invite.event %></li>
+                <% if current_user == @user %>
+                  <li>
+                      <%= link_to invite.inviter.full_name, invite.inviter %> invited you to <%= link_to invite.event.title, invite.event %>. <%= button_to 'Accept Invite', accept_invite_user_path, params: { event_id: invite.event.id }, class: 'btn btn-sm btn-success' %>
+                  </li>
+                <% else %>
+                  <li><%= link_to invite.inviter.full_name, invite.inviter %> invited <%= @user.first_name %> to <%= link_to invite.event.title, invite.event %></li>
+                <% end %>
               <% end %>
             <% end %>
           </ul>

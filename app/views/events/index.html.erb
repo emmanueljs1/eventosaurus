@@ -45,7 +45,13 @@
                 <h6>Date: <%= event.date.strftime("%B %d, %Y") %></h6>
                 <h6>Time: <%= event.date.strftime("%l:%M %P") %></h6>
                 <h6>Creator: <%= link_to event.creator.full_name, event.creator %></h6>
-                <!-- TODO: logic for 'going' -->
+                <% if event.attendees.include?(current_user) %>
+                  <button type="button" class="btn btn-success" disabled>Going</button>
+                <% elsif Invite.find_by(invitee: current_user, event: event) %>
+                  <%= button_to 'Accept Invite', accept_invite_user_path(current_user.id), params: { event_id: event.id }, class: 'btn btn-success' %>
+                <% else %>
+                  <%= button_to 'Mark Going', going_user_path(current_user.id), params: { event_id: event.id }, class: 'btn btn-success' %>
+                <% end %>
               </div>
             </div>
           </div>

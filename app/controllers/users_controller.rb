@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: [:show, :edit, :update, :destroy, :accept_invite]
-  before_action :authenticate_user, except: [:index, :show, :new, :create, :accept_invite]
+  before_action :set_user, only: [:show, :edit, :update, :destroy, :accept_invite, :mark_going]
+  before_action :authenticate_user, except: [:index, :show, :new, :create, :accept_invite, :mark_going]
 
   # GET /users
   # GET /users.json
@@ -94,6 +94,16 @@ class UsersController < ApplicationController
         format.html { redirect_to users_url, error: 'You can only accept invites you received.' }
         format.json { render json: @user.errors, status: :unprocessable_entity }
       end
+    end
+  end
+
+  # POST users/1/going
+  # POST /users/1/going.json
+  def mark_going
+    respond_to do |format|
+      event = Event.find(params[:event_id])
+      @user.events << event
+      format.html { redirect_back fallback_location: @user, notice: "Marked going to #{event.title}." }
     end
   end
 

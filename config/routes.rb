@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get 'privacy_policy', to: 'privacy_policy#index'
   get 'welcome/index'
   root 'welcome#index'
   resources :events do

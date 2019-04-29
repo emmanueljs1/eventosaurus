@@ -88,7 +88,7 @@ class UsersController < ApplicationController
       if @user == current_user
         event = Event.find(params[:event_id])
         @user.accept_invite(event)
-        format.html { redirect_to @user, notice: "Successfully accepted invite to #{event.title}." }
+        format.html { redirect_back fallback_location: @user, notice: "Successfully accepted invite to #{event.title}." }
         format.json { render :show, status: :ok, location: @user }
       else
         format.html { redirect_to users_url, error: 'You can only accept invites you received.' }

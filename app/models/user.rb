@@ -1,5 +1,6 @@
 class User < ApplicationRecord
   include BCrypt
+  before_destroy :destroy_owned_events
 
   validates_presence_of :first_name, :last_name, :email
   validates_uniqueness_of :email
@@ -11,6 +12,12 @@ class User < ApplicationRecord
   has_many :events, through: :events_users, source: :event
   has_many :invites_received, class_name: 'Invite', foreign_key: 'invitee_id', dependent: :destroy
   has_many :invites_sent, class_name: 'Invite', foreign_key: 'inviter_id', dependent: :destroy
+
+  def destroy_owned_events
+    events_hosting.each do |event|
+      event.destroy
+    end
+  end
 
   def events_hosting
     created = []
@@ -32,7 +39,7 @@ class User < ApplicationRecord
     invite = Invite.find_by(invitee: self, event: event)
     return if invite.nil?
 
-    events << event
+    event.attendees << self
     invite.destroy
   end
 

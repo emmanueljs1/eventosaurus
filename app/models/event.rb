@@ -1,13 +1,10 @@
 class Event < ApplicationRecord
   validates_presence_of :title, :description, :location, :date
   validates_uniqueness_of :title
+  belongs_to :creator, class_name: 'User'
   has_many :events_users, dependent: :destroy
   has_many :attendees, through: :events_users, source: :user
   has_many :invites, dependent: :destroy
-
-  def creator
-    attendees[0]
-  end
 
   def invitees
     invites.map(&:invitee)

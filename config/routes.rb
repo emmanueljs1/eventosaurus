@@ -16,4 +16,7 @@ Rails.application.routes.draw do
   get '/login', to: 'sessions#new'
   post '/login', to: 'sessions#create'
   delete '/logout', to: 'sessions#destroy'
+  # Routes for Google authentication
+  get 'auth/:provider/callback', to: 'sessions#google_auth'
+  get 'auth/failure', to: redirect('/')
 end

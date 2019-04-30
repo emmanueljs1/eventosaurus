@@ -8,6 +8,9 @@
           <% if current_user == @user %>
             <%= link_to 'Edit account', edit_user_path(current_user), class: 'btn btn-secondary', style: 'margin-bottom: 5px' %>&nbsp;
             <%= link_to 'Delete account', current_user, method: :delete, class: 'btn btn-danger', style: 'margin-bottom: 5px', data: { confirm: 'Are you sure?' } %>
+            <% if current_user.google_token.nil? %>
+              <br><%= link_to 'Connect account to Google Calendar', '/auth/google_oauth2', class: 'btn btn-success', style: 'margin-bottom: 5px' %>
+            <% end %>
           <% end %>
         </div>
       </div>

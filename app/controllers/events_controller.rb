@@ -3,13 +3,11 @@ class EventsController < ApplicationController
   before_action :authenticate_user, only: [:new, :create, :edit, :update, :destroy, :invite_user]
 
   # GET /events
-  # GET /events.json
   def index
     @events = Event.all
   end
 
   # GET /events/1
-  # GET /events/1.json
   def show
     @users = User.all
   end
@@ -23,73 +21,52 @@ class EventsController < ApplicationController
   def edit
     return if @event.creator == current_user
 
-    respond_to do |format|
-      format.html { redirect_back fallback_location: root_path, error: 'You can only edit an event you created.' }
-      format.json { render json: @event.errors, status: :unprocessable_entity }
-    end
+    redirect_back fallback_location: root_path, error: 'You can only edit an event you created.'
   end
 
   # POST /events
-  # POST /events.json
   def create
     @event = Event.new(event_params)
     @event.creator = current_user
     @event.attendees << current_user
-    respond_to do |format|
-      if @event.save
-        format.html { redirect_to @event, notice: 'Event was successfully created.' }
-        format.json { render :show, status: :created, location: @event }
-      else
-        format.html { render :new }
-        format.json { render json: @event.errors, status: :unprocessable_entity }
-      end
+    if @event.save
+      redirect_to @event, notice: 'Event was successfully created.'
+    else
+      render :new
     end
   end
 
   # PATCH/PUT /events/1
-  # PATCH/PUT /events/1.json
   def update
-    respond_to do |format|
-      if current_user == @event.creator
-        if @event.update(event_params)
-          format.html { redirect_to @event, notice: 'Event was successfully updated.' }
-          format.json { render :show, status: :ok, location: @event }
-        else
-          format.html { render :edit }
-          format.json { render json: @event.errors, status: :unprocessable_entity }
-        end
+    if current_user == @event.creator
+      if @event.update(event_params)
+        redirect_to @event, notice: 'Event was successfully updated.'
       else
-        format.html { redirect_to @event, error: 'You can only update an event you created.' }
-        format.json { render json: @event.errors, status: :unprocessable_entity }
+        render :edit
       end
+    else
+      redirect_to @event, error: 'You can only update an event you created.'
     end
   end
 
   # DELETE /events/1
-  # DELETE /events/1.json
   def destroy
-    respond_to do |format|
-      if current_user == @event.creator
-        @event.destroy
-        format.html { redirect_to events_url, notice: 'Event was successfully destroyed.' }
-      else
-        format.html { redirect_to @event, notice: 'You can only delete an event you created.' }
-      end
-      format.json { head :no_content }
+    if current_user == @event.creator
+      @event.destroy
+      redirect_to events_url, notice: 'Event was successfully destroyed.'
+    else
+      redirect_to @event, notice: 'You can only delete an event you created.'
     end
   end
 
   # POST events/1/invite
   def invite_user
-    respond_to do |format|
-      inviter = User.find(session[:user_id])
-      invitee = User.find(params[:user_id])
-      if @event.invite_user(inviter, invitee)
-        format.html { redirect_back fallback_location: @event, notice: 'User was successfully invited.' }
-      else
-        format.html { redirect_back fallback_location: @event, error: 'An error happened while inviting the user' }
-      end
-      format.json { head :no_content }
+    inviter = User.find(session[:user_id])
+    invitee = User.find(params[:user_id])
+    if @event.invite_user(inviter, invitee)
+      redirect_back fallback_location: @event, notice: 'User was successfully invited.'
+    else
+      redirect_back fallback_location: @event, error: 'An error happened while inviting the user'
     end
   end
 

@@ -14,9 +14,11 @@
             <h6>Creator: <%= link_to @event.creator.full_name, @event.creator %></h6>
             <% if logged_in? %>
               <% if current_user == @event.creator %>
-                <%= link_to 'Edit event', edit_event_path(@event), class: 'btn btn-sm btn-secondary', style: 'margin-bottom: 5px;' %>
-                <%= link_to 'Delete event', @event, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-sm btn-danger', style: 'margin-bottom: 5px;' %>
-                <%= button_to 'Add to calendar', gcal_user_path(current_user.id), params: { event_id: @event.id }, class: 'btn btn-sm btn-success'%>
+                <%= link_to 'Edit event', edit_event_path(@event), class: 'btn btn-sm btn-secondary' %>
+                <%= link_to 'Delete event', @event, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-sm btn-danger' %>
+                <% if current_user.google_token.present? %>
+                  <%= button_to 'Add to calendar', gcal_user_path(current_user.id), params: { event_id: @event.id }, class: 'btn btn-sm btn-success', style: 'margin-top: 5px' %>
+                <% end %>
               <% else %>
                 <% if @event.attendees.include?(current_user) %>
                   <button type="button" class="btn btn-sm btn-success" style="margin-bottom: 5px;" disabled>Going</button>

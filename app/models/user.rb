@@ -14,9 +14,7 @@ class User < ApplicationRecord
   has_many :invites_sent, class_name: 'Invite', foreign_key: 'inviter_id', dependent: :destroy
 
   def destroy_owned_events
-    events_hosting.each do |event|
-      event.destroy
-    end
+    events_hosting.each(&:destroy)
   end
 
   def events_hosting

@@ -92,13 +92,13 @@ class UsersController < ApplicationController
 
     event = Event.find(params[:event_id])
 
-    gcal_event = Google::Apis::CalendarV3::Event.new({
+    gcal_event = Google::Apis::CalendarV3::Event.new(
       start: Google::Apis::CalendarV3::EventDateTime.new(date_time: event.date.rfc3339),
       end: Google::Apis::CalendarV3::EventDateTime.new(date_time: (event.date + 1.hours).rfc3339),
       summary: event.title,
       description: event.description,
       location: event.location
-    })
+    )
 
     service.insert_event('primary', gcal_event)
     redirect_back fallback_location: @user, notice: "Added #{event.title} to calendar."

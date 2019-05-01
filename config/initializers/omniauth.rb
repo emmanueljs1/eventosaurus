@@ -1,5 +1,8 @@
 OmniAuth.config.full_host = Rails.env.production? ? 'https://events-app-emmanueljs1.herokuapp.com' : 'http://localhost:3000'
 
 Rails.application.config.middleware.use OmniAuth::Builder do
-  provider :google_oauth2, Rails.application.secrets.google_client_id, Rails.application.secrets.google_client_secret
+  provider :google_oauth2, Rails.application.secrets.google_client_id, Rails.application.secrets.google_client_secret,
+  {
+    scope: "userinfo.email, userinfo.profile, #{::Google::Apis::CalendarV3::AUTH_CALENDAR_EVENTS}"
+  }
 end

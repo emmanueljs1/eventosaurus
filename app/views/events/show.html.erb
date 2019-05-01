@@ -13,11 +13,13 @@
           <h6>Creator: <%= link_to @event.creator.full_name, @event.creator %></h6>
           <% if logged_in? %>
             <% if current_user == @event.creator %>
-            <%= link_to 'Edit event', edit_event_path(@event), class: 'btn btn-secondary' %>
-            <%= link_to 'Delete event', @event, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
+              <%= link_to 'Edit event', edit_event_path(@event), class: 'btn btn-secondary', style: 'margin-bottom: 5px;' %>
+              <%= link_to 'Delete event', @event, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger', style: 'margin-bottom: 5px;' %>
+              <%= button_to 'Add to calendar', gcal_user_path(current_user.id), params: { event_id: @event.id }, class: 'btn btn-success'%>
             <% else %>
               <% if @event.attendees.include?(current_user) %>
-              <button type="button" class="btn btn-success" disabled>Going</button>
+              <button type="button" class="btn btn-success" style="margin-bottom: 5px;" disabled>Going</button>
+              <%= button_to 'Add to calendar', gcal_user_path(current_user.id), params: { event_id: @event.id }, class: 'btn btn-success'%>
               <% elsif Invite.find_by(invitee: current_user, event: @event) %>
                 <%= button_to 'Accept Invite', accept_invite_user_path(current_user.id), params: { event_id: @event.id }, class: 'btn btn-success' %>
               <% else %>

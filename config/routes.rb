@@ -11,6 +11,7 @@ Rails.application.routes.draw do
     member do
       post '/accept_invite', to: 'users#accept_invite'
       post '/going', to: 'users#mark_going'
+      post '/gcal', to: 'users#add_to_gcal'
     end
   end
   get '/login', to: 'sessions#new'

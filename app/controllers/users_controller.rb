@@ -2,6 +2,9 @@ class UsersController < ApplicationController
   before_action :set_user, except: [:index, :new, :create]
   before_action :authenticate_user, except: [:index, :show, :new, :create]
 
+  Calendar = ::Google::Apis::CalendarV3
+  Client = ::Signet::OAuth2::Client
+
   # GET /users
   def index
     @users = User.all
@@ -78,6 +81,29 @@ class UsersController < ApplicationController
     redirect_back fallback_location: @user, notice: "Marked going to #{event.title}."
   end
 
+  # POST /users/1/gcal
+  def add_to_gcal
+    service = Calendar::CalendarService.new
+    # Use google keys to authorize
+    service.authorization = credentials
+
+    # Request for a new access token just in case it expired
+    service.authorization.refresh!
+
+    event = Event.find(params[:event_id])
+
+    gcal_event = Google::Apis::CalendarV3::Event.new({
+      start: Google::Apis::CalendarV3::EventDateTime.new(date_time: event.date.rfc3339),
+      end: Google::Apis::CalendarV3::EventDateTime.new(date_time: (event.date + 1.hours).rfc3339),
+      summary: event.title,
+      description: event.description,
+      location: event.location
+    })
+
+    service.insert_event('primary', gcal_event)
+    redirect_back fallback_location: @user, notice: "Added #{event.title} to calendar."
+  end
+
   private
 
   # Use callbacks to share common setup or constraints between actions.
@@ -88,5 +114,18 @@ class UsersController < ApplicationController
   # Never trust parameters from the scary internet, only allow the white list through.
   def user_params
     params.require(:user).permit(:first_name, :last_name, :email, :password)
+  end
+
+  def credentials
+    Client.new(
+      access_token: @user.google_token,
+      refresh_token: @user.google_refresh_token,
+      client_id: Rails.application.secrets.google_client_id,
+      client_secret: Rails.application.secrets.google_client_secret,
+      scope: ['userinfo.email', 'userinfo.profile', Calendar::AUTH_CALENDAR_EVENTS],
+      redirect_uri: OmniAuth.config.full_host + '/auth/google_oauth2/callback',
+      authorization_uri: 'https://accounts.google.com/o/oauth2/auth',
+      token_credential_uri: 'https://oauth2.googleapis.com/token'
+    )
   end
 end

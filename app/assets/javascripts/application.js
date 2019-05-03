@@ -15,4 +15,7 @@
 //= require bootstrap-sprockets
 //= require rails-ujs
 //= require turbolinks
+//= require js.cookie
+//= require jstz
+//= require browser_timezone_rails/set_time_zone
 //= require_tree .

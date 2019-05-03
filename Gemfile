@@ -24,6 +24,7 @@ gem 'omniauth-google-oauth2'
 gem 'redis'
 gem 'bcrypt', '3.1.11'
 gem 'jquery-rails'
+gem 'browser-timezone-rails'
 gem 'bootstrap', '~> 4.3.1'
 
 # Use CoffeeScript for .coffee assets and views

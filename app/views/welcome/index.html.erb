@@ -1,5 +1,133 @@
-<% if logged_in? %>
-  Hello <%= current_user.full_name %>
-<% else %>
-  Log in!
-<% end %>
+<div class="row">
+  <div class="col">
+    <% if logged_in? %>
+      <div class="row">
+        <h2>Welcome, <%= current_user.full_name %></h2>
+      </div>
+      <div class="row">
+        <div class="col-md-8">
+          <div class="row">
+            <div class="col card">
+              <div class="card-body">
+                <div class="row">
+                  <h5 class="card-title">Hosting:</h5>
+                </div>
+                <% if current_user.events_hosting.take(5).empty? %>
+                <div class="row">
+                  <h6>You are not hosting any events. <%= link_to "Create one?", new_event_path %></h6>
+                </div>
+                <% else %>
+                  <% current_user.events_hosting.take(2).each do |event| %>
+                    <div class="row" style="margin-top: 10px">
+                      <div class="col card" style="background-color: #f2f2f2;">
+                        <div class="card-body">
+                          <h6><%= link_to event.title, event %></h6>
+                          <h6>Date: <%= event.date.strftime("%B %d, %Y") %></h6>
+                          <h6>Time: <%= event.date.strftime("%l:%M %P") %></h6>
+                          <h6 style="margin-bottom: 0px">Location: <%= event.location %></h6>
+                        </div>
+                      </div>
+                    </div>
+                  <% end %>
+                  <div class="row" style="margin-top: 5px;">
+                    <h6 style="margin-bottom: 0px;"><%= link_to 'See more?', current_user %></h6>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          </div>
+          <div class="row" style="margin-top: 5px;">
+            <div class="col card">
+              <div class="card-body">
+                <div class="row">
+                  <h5 class="card-title">Attending:</h5>
+                </div>
+                <% if current_user.events_attending.take(2).empty? %>
+                <div class="row">
+                  <h6>You are not attending any events. <%= link_to "Mark 'Going' to one?", events_path %></h6>
+                </div>
+                <% else %>
+                  <% current_user.events_attending.take(2).each do |event| %>
+                    <div class="row" style="margin-top: 10px">
+                      <div class="col card" style="background-color: #f2f2f2;">
+                        <div class="card-body">
+                          <h6><%= link_to event.title, event %></h6>
+                          <h6>Date: <%= event.date.strftime("%B %d, %Y") %></h6>
+                          <h6>Time: <%= event.date.strftime("%l:%M %P") %></h6>
+                          <h6 style="margin-bottom: 0px">Location: <%= event.location %></h6>
+                        </div>
+                      </div>
+                    </div>
+                  <% end %>
+                  <div class="row" style="margin-top: 5px;">
+                    <h6 style="margin-bottom: 0px;"><%= link_to 'See more?', current_user %></h6>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="row" style="margin-left: 5px;">
+            <div class="col card">
+              <div class="card-body">
+                <div class="row">
+                  <h5 class="card-title">Invites</h5>
+                </div>
+                <div class="row" style="margin-top: 10px;">
+                  <% current_user.invites_received.take(10).each do |invite| %>
+                    <br>
+                    <div class="col-md-8">
+                      <div class="row" style="margin-right: 5px; border-right: solid lightgray">
+                        <div class="col">
+                          <%= invite.inviter.full_name %> invited you to&nbsp;<%= link_to invite.event.title, invite.event %>.
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="row">
+                        <div style="float: left">
+                            <%= button_to 'Accept Invite', accept_invite_user_path(current_user.id), params: { event_id: invite.event.id }, class: 'btn btn-sm btn-success', style: 'margin: 0;position: absolute;top: 50%;-ms-transform: translateY(-50%);transform: translateY(-50%);' %>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="w-100"></div>
+                  <% end %> 
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% else %>
+      <div class="row">
+        <div class="col">
+          <h1 style="text-align: center;">Welcome to <b style="font-family: 'Courier New', Courier, monospace;">eventosaurus</b>!</h1>
+          <h3 style="text-align: center;">An app for making and sharing events!</h3>
+          <h5 style="text-align: center;">Would you like to <%= link_to 'make an account?', new_user_path %></h5>
+        </div>
+      </div>
+      <% unless @events.empty? %>
+        <div class="row">
+          <h3>Events:</h3>
+        </div>  
+        <% @events.each do |event| %>
+          <div class="row" style="margin-top: 5px; margin-bottom: 5px;">
+            <div class="col card">
+              <div class="card-body" id=<%= "event_#{event.id}" %>>
+                <h4 class="card-title"><%= link_to event.title, event %></h4>
+                <p class="card-text">
+                  <%= event.description %>
+                </p>
+                <h6>Location: <%= event.location %></h6>
+                <h6>Date: <%= event.date.strftime("%B %d, %Y") %></h6>
+                <h6>Time: <%= event.date.strftime("%l:%M %P") %></h6>
+                <h6>Creator: <%= link_to event.creator.full_name, event.creator %></h6>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      <% end %>
+    <% end %>
+  </div>
+</div>
